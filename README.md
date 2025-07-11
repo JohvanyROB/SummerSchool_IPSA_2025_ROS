@@ -7,6 +7,7 @@ mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src && git clone https://github.com/Johva
 ```
 
 ## Compile the project
+In the same terminal, run the following instruction:
 ```bash
 cd ~/ros2_ws/src/SummerSchool_IPSA_2025_ROS && ./install_dependencies.sh && source ~/ros2_ws/install/setup.bash
 ```
