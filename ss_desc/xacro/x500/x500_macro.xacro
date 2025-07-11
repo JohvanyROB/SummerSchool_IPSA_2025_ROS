@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot name="macro" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="cylinder_inertial" params="mass radius length o_xyz='0 0 0' o_rpy='0 0 0'">
+        <inertial>
+        <origin xyz="${o_xyz}" rpy="${o_rpy}"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${mass*(3*radius*radius+length*length)/12}"
+            iyy="${mass*(3*radius*radius+length*length)/12}"
+            izz="${mass*radius*radius/2}"
+            ixy="0" iyz="0" ixz="0"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="box_inertial" params="mass width height length o_xyz:='0 0 0' o_rpy='0 0 0'">
+        <inertial>
+        <mass value="${mass}"/>
+        <origin xyz="${o_xyz}" rpy="${o_rpy}"/>
+        <inertia ixx="${mass / 12 * (width*width + height*height)}"
+            iyy="${mass / 12 * (height*height + length*length)}"
+            izz="${mass / 12 * (width*width + length*length)}"
+            ixy="0" iyz="0" ixz="0"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="rotor_gazebo" params="link_name is_cw">
+        <gazebo>
+            <xacro:if value="${is_cw}">
+                <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+                    <a0>0.3</a0>
+                    <alpha_stall>1.4</alpha_stall>
+                    <cla>4.2500</cla>
+                    <cda>0.10</cda>
+                    <cma>0.0</cma>
+                    <cla_stall>-0.025</cla_stall>
+                    <cda_stall>0.0</cda_stall>
+                    <cma_stall>0.0</cma_stall>
+                    <area>0.1238</area>
+                    <air_density>1.2041</air_density>
+                    <cp>0.04725 0 0</cp>    <!--Center of pressure: 30-35% of blade length-->
+                    <forward>0 -1 0</forward>
+                    <upward>0 0 1</upward>
+                    <link_name>${link_name}</link_name>
+                </plugin>
+                <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+                    <a0>0.3</a0>
+                    <alpha_stall>1.4</alpha_stall>
+                    <cla>4.2500</cla>
+                    <cda>0.10</cda>
+                    <cma>0.0</cma>
+                    <cla_stall>-0.025</cla_stall>
+                    <cda_stall>0.0</cda_stall>
+                    <cma_stall>0.0</cma_stall>
+                    <area>0.1238</area>
+                    <air_density>1.2041</air_density>
+                    <cp>-0.04725 0 0</cp>
+                    <forward>0 1 0</forward>
+                    <upward>0 0 1</upward>
+                    <link_name>${link_name}</link_name>
+                </plugin>
+            </xacro:if>
+            <xacro:unless value="${is_cw}">
+                <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+                    <a0>0.3</a0>
+                    <alpha_stall>1.4</alpha_stall>
+                    <cla>4.2500</cla>
+                    <cda>0.10</cda>
+                    <cma>0.0</cma>
+                    <cla_stall>-0.025</cla_stall>
+                    <cda_stall>0.0</cda_stall>
+                    <cma_stall>0.0</cma_stall>
+                    <area>0.1238</area>
+                    <air_density>1.2041</air_density>
+                    <cp>0.04725 0 0</cp>
+                    <forward>0 1 0</forward>
+                    <upward>0 0 1</upward>
+                    <link_name>${link_name}</link_name>
+                </plugin>
+                <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+                    <a0>0.3</a0>
+                    <alpha_stall>1.4</alpha_stall>
+                    <cla>4.2500</cla>
+                    <cda>0.10</cda>
+                    <cma>0.0</cma>
+                    <cla_stall>-0.025</cla_stall>
+                    <cda_stall>0.0</cda_stall>
+                    <cma_stall>0.0</cma_stall>
+                    <area>0.1238</area>
+                    <air_density>1.2041</air_density>
+                    <cp>-0.04725 0 0</cp>
+                    <forward>0 -1 0</forward>
+                    <upward>0 0 1</upward>
+                    <link_name>${link_name}</link_name>
+                </plugin>
+            </xacro:unless>
+        </gazebo>
+    </xacro:macro>
+</robot>

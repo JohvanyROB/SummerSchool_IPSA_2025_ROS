@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<robot name="x500" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<gazebo> 
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+            <robot_base_frame>$(arg robot_name)_base_footprint</robot_base_frame>
+            <tf_topic>/tf</tf_topic>
+            <odom_topic>$(arg robot_name)/odometry</odom_topic>
+            <odom_frame>$(arg robot_name)_odom</odom_frame>
+            <odom_publish_frequency>20</odom_publish_frequency>
+			<dimensions>3</dimensions>
+        </plugin>
+
+        <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+            <topic>$(arg robot_name)/joint_states</topic>
+        </plugin>
+
+        <plugin name="gz::sim::systems::QuadController" filename="QuadController">
+            <model_type>Quadcopter</model_type>
+            <robot_namespace>$(arg robot_name)</robot_namespace>
+            <robot_base_frame>$(arg robot_name)_base_footprint</robot_base_frame>
+            <motor1_joint>$(arg robot_name)_base_to_rotor_RR</motor1_joint>
+            <motor2_joint>$(arg robot_name)_base_to_rotor_FR</motor2_joint>
+            <motor3_joint>$(arg robot_name)_base_to_rotor_RL</motor3_joint>
+            <motor4_joint>$(arg robot_name)_base_to_rotor_FL</motor4_joint>
+            <speed_test>117</speed_test>
+            <multiplier>20.0</multiplier>
+
+            <z_take_off>1.5</z_take_off>
+            <z_land>0.25</z_land>
+
+            <uv_cmd_max>10</uv_cmd_max>
+            <w_cmd_max>10</w_cmd_max>
+
+            <Kp_u>1.0</Kp_u>
+            <Kd_u>0.0</Kd_u>
+            <Ki_u>0.0</Ki_u>
+
+            <Kp_v>1.0</Kp_v>
+            <Kd_v>0.0</Kd_v>
+            <Ki_v>0.0</Ki_v>
+
+            <Kp_w>10.0</Kp_w>
+            <Kd_w>0.0</Kd_w>
+            <Ki_w>1.5</Ki_w>
+            
+            <Kp_p>40.0</Kp_p>
+            <Kd_p>0.01</Kd_p>
+            <Ki_p>0.0</Ki_p>
+            <p_cmd_max>5.0</p_cmd_max>
+
+            <Kp_q>40.0</Kp_q>
+            <Kd_q>0.01</Kd_q>
+            <Ki_q>0.0</Ki_q>
+            <q_cmd_max>5.0</q_cmd_max>
+
+            <Kp_r>100.0</Kp_r>
+            <Kd_r>0.0</Kd_r>
+            <Ki_r>10.0</Ki_r>
+            <r_cmd_max>20.0</r_cmd_max>
+        </plugin>
+    </gazebo>
+
+    <xacro:rotor_gazebo link_name="$(arg robot_name)_rotor_FL" is_cw="1"/>
+    <xacro:rotor_gazebo link_name="$(arg robot_name)_rotor_FR" is_cw="0"/>
+    <xacro:rotor_gazebo link_name="$(arg robot_name)_rotor_RL" is_cw="0"/>
+    <xacro:rotor_gazebo link_name="$(arg robot_name)_rotor_RR" is_cw="1"/>
+</robot>

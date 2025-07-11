@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot name="x500" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="base_color" default="Grey"/>
+    <xacro:arg name="robot_name" default="drone1"/>
+
+
+    <!-- *****************INCLUDES************************* -->
+    <xacro:include filename="$(find ss_desc)/xacro/materials.xacro"/>
+    <xacro:include filename="$(find ss_desc)/xacro/x500/x500_macro.xacro"/>
+    <xacro:include filename="$(find ss_desc)/xacro/x500/x500.gazebo"/>
+
+
+    <!-- *****************BASE LINK************************* -->
+    <link name="$(arg robot_name)_base_footprint"/>
+    <joint name="$(arg robot_name)_bfp_to_bl" type="fixed">
+        <parent link="$(arg robot_name)_base_footprint"/>
+        <child link="$(arg robot_name)_base_link"/>
+    </joint>
+
+    <link name="$(arg robot_name)_base_link">
+        
+    </link>
+
+
+    <!-- *****************ROTORS************************* -->
+    
+</robot>
