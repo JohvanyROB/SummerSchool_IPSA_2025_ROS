@@ -143,8 +143,15 @@ void QuadController::PreUpdate(const gz::sim::UpdateInfo &_info, gz::sim::Entity
          * z (current altitude) corresponds to this->dataPtr->pose.Pos().Z().
          * Use the square root controller to define w_d as discussed in Lecture 3.
          */
-
-        //this->target_w = ...
+        float error = this->dataPtr->z_take_off - this->dataPtr->pose.Pos().Z();
+        float K = 0.1;
+        if(error >= 0){
+            this->dataPtr->target_w = K * sqrt(abs(error));
+        }
+        else{
+            this->dataPtr->target_w = -K * sqrt(abs(error));
+        }
+        
     }
 
     //If the UAV is landing
@@ -431,7 +438,7 @@ void QuadControllerPrivate::stabilization(const double _dt, gz::sim::EntityCompo
      * w_d is this->target_w
      */
 
-    //this->body_force.Z( ... );
+    this->body_force.Z(this->pid_w.Update(this->linear_velocity.Z() - this->target_w, std::chrono::duration<double>(_dt)));
 
 
     /***************************************DEBUG PURPOSE******************************************* */
@@ -458,10 +465,10 @@ void QuadControllerPrivate::mixer(){
      * Refer to lecture 3 to see how to distribute the force and the torques amoung the target motors' forces.
      */
 
-     //this->F_FL = ...;
-     //this->F_FR = ...;
-     //this->F_RL = ...;
-     //this->F_RR = ...;
+     this->F_FL = this->body_force.Z()/4.0;
+     this->F_FR = this->body_force.Z()/4.0;
+     this->F_RL = this->body_force.Z()/4.0;
+     this->F_RR = this->body_force.Z()/4.0;
 
 
     
