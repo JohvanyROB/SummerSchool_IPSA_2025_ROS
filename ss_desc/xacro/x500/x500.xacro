@@ -18,10 +18,226 @@
     </joint>
 
     <link name="$(arg robot_name)_base_link">
+        <!-- Visual tags -->
+        <visual>
+            <origin xyz="0 0 0.025" rpy="0 0 ${pi}"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/NXP-HGD-CF.dae"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="0.174 0.174 0.032" rpy="0 0 -0.45"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Base.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="-0.174 0.174 0.032" rpy="0 0 -0.45"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Base.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="0.174 -0.174 0.032" rpy="0 0 -0.45"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Base.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="-0.174 -0.174 0.032" rpy="0 0 -0.45"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Base.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+
+        <!-- Collision tags -->
+        <collision name="$(arg robot_name)_base_collision0">
+            <origin xyz="0 0 0.025"/>
+            <geometry>
+                <box size="0.35355339059327373 0.35355339059327373 0.05"/>
+            </geometry>
+        </collision>
+        <collision name="$(arg robot_name)_base_collision1">
+            <origin xyz="0 -0.098 -0.123" rpy="-0.35 0 0"/>
+            <geometry>
+                <box size="0.015 0.015 0.21"/>
+            </geometry>
+        </collision>
+        <collision name="$(arg robot_name)_base_collision2">
+            <origin xyz="0 0.098 -0.123" rpy="0.35 0 0"/>
+            <geometry>
+                <box size="0.015 0.015 0.21"/>
+            </geometry>
+        </collision>
+        <collision name="$(arg robot_name)_base_collision3">
+            <origin xyz="0 -0.132 -0.2195"/>
+            <geometry>
+                <box size="0.25 0.015 0.015"/>
+            </geometry>
+        </collision>
+        <collision name="$(arg robot_name)_base_collision4">
+            <origin xyz="0 0.132 -0.2195"/>
+            <geometry>
+                <box size="0.25 0.015 0.015"/>
+            </geometry>
+        </collision>
         
+        <!-- Inertial tag -->
+        <inertial>
+            <mass value="2.0"/>
+            <inertia ixx="0.02166666666666667"
+                iyy="0.02166666666666667"
+                izz="0.04000000000000001"
+                ixy="0" iyz="0" ixz="0"/>
+        </inertial>
     </link>
 
 
     <!-- *****************ROTORS************************* -->
-    
+    <link name="$(arg robot_name)_rotor_FL">
+        <!-- Visual -->
+        <visual>
+            <origin xyz="0 0 -0.032"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Bell.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="White"/>
+        </visual>
+        <visual>
+            <origin xyz="-0.022 -0.14638461538461536 -0.016"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/1345_prop_cw.stl" scale="0.8461538461538461 0.8461538461538461 0.8461538461538461"/>
+            </geometry>
+            <material name="Red"/>
+        </visual>
+
+        <!-- Collision -->
+        <collision>
+            <origin rpy="0 0 ${pi/2}"/>
+            <geometry>
+                <box size="0.2792307692307692 0.016923076923076923 0.0008461538461538462"/>
+            </geometry>
+        </collision>
+
+        <!-- Inertial -->
+        <xacro:box_inertial mass="0.016076923076923075" width="0.016923076923076923" height="0.0008461538461538462" length="0.2792307692307692" o_rpy="0 0 ${pi/2}"/>      
+    </link>
+
+    <joint name="$(arg robot_name)_base_to_rotor_FL" type="continuous">
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_rotor_FL"/>
+        <origin xyz="0.174 0.174 0.06"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+
+    <link name="$(arg robot_name)_rotor_RR">
+        <!-- Visual -->
+        <visual>
+            <origin xyz="0 0 -0.032"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Bell.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="White"/>
+        </visual>
+        <visual>
+            <origin xyz="-0.022 -0.14638461538461536 -0.016"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/1345_prop_cw.stl" scale="0.8461538461538461 0.8461538461538461 0.8461538461538461"/>
+            </geometry>
+            <material name="Blue"/>
+        </visual>
+
+        <!-- Collision -->
+        <collision>
+            <origin rpy="0 0 ${pi/2}"/>
+            <geometry>
+                <box size="0.2792307692307692 0.016923076923076923 0.0008461538461538462"/>
+            </geometry>
+        </collision>
+
+        <!-- Inertial -->
+        <xacro:box_inertial mass="0.016076923076923075" width="0.016923076923076923" height="0.0008461538461538462" length="0.2792307692307692" o_rpy="0 0 ${pi/2}"/>      
+    </link>
+
+    <joint name="$(arg robot_name)_base_to_rotor_RR" type="continuous">
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_rotor_RR"/>
+        <origin xyz="-0.174 -0.174 0.06"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+
+    <link name="$(arg robot_name)_rotor_FR">
+        <!-- Visual -->
+        <visual>
+            <origin xyz="0 0 -0.032"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Bell.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="White"/>
+        </visual>
+        <visual>
+            <origin xyz="-0.022 -0.14638461538461536 -0.016"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/1345_prop_ccw.stl" scale="0.8461538461538461 0.8461538461538461 0.8461538461538461"/>
+            </geometry>
+            <material name="Red"/>
+        </visual>
+
+        <!-- Collision -->
+        <collision>
+            <origin rpy="0 0 ${pi/2}"/>
+            <geometry>
+                <box size="0.2792307692307692 0.016923076923076923 0.0008461538461538462"/>
+            </geometry>
+        </collision>
+
+        <!-- Inertial -->
+        <xacro:box_inertial mass="0.016076923076923075" width="0.016923076923076923" height="0.0008461538461538462" length="0.2792307692307692" o_rpy="0 0 ${pi/2}"/>      
+    </link>
+
+    <joint name="$(arg robot_name)_base_to_rotor_FR" type="continuous">
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_rotor_FR"/>
+        <origin xyz="0.174 -0.174 0.06"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+
+    <link name="$(arg robot_name)_rotor_RL">
+        <!-- Visual -->
+        <visual>
+            <origin xyz="0 0 -0.032"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/5010Bell.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="White"/>
+        </visual>
+        <visual>
+            <origin xyz="-0.022 -0.14638461538461536 -0.016"/>
+            <geometry>
+                <mesh filename="package://ss_desc/xacro/x500/meshes/1345_prop_ccw.stl" scale="0.8461538461538461 0.8461538461538461 0.8461538461538461"/>
+            </geometry>
+            <material name="Blue"/>
+        </visual>
+
+        <!-- Collision -->
+        <collision>
+            <origin rpy="0 0 ${pi/2}"/>
+            <geometry>
+                <box size="0.2792307692307692 0.016923076923076923 0.0008461538461538462"/>
+            </geometry>
+        </collision>
+
+        <!-- Inertial -->
+        <xacro:box_inertial mass="0.016076923076923075" width="0.016923076923076923" height="0.0008461538461538462" length="0.2792307692307692" o_rpy="0 0 ${pi/2}"/>      
+    </link>
+
+    <joint name="$(arg robot_name)_base_to_rotor_RL" type="continuous">
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_rotor_RL"/>
+        <origin xyz="-0.174 0.174 0.06"/>
+        <axis xyz="0 0 1"/>
+    </joint>
 </robot>
