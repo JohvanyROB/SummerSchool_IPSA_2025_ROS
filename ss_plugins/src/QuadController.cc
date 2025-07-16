@@ -164,7 +164,14 @@ void QuadController::PreUpdate(const gz::sim::UpdateInfo &_info, gz::sim::Entity
          * Use the square root controller to define w_d as discussed in Lecture 3.
          */
 
-        //this->target_w = ...
+        float error = 0 - this->dataPtr->pose.Pos().Z();
+        float K = 0.1;
+        if(error >= 0){
+            this->dataPtr->target_w = K * sqrt(abs(error));
+        }
+        else{
+            this->dataPtr->target_w = -K * sqrt(abs(error));
+        }
     }
     
     //If the UAV is not in LANDED mode
@@ -370,8 +377,8 @@ void QuadControllerPrivate::attitude_control(const double _dt){
      * this->gravity.Z(): -g
      */
     
-    //this->target_roll = ...
-    //this->target_pitch = ...
+    this->target_roll = this->pid_v.Update(this->linear_velocity.Y() - this->target_v, std::chrono::duration<double>(_dt)) / this->gravity.Z();
+    this->target_pitch = -this->pid_u.Update(this->linear_velocity.X() - this->target_u, std::chrono::duration<double>(_dt)) / this->gravity.Z();
 
 
     /**
@@ -381,8 +388,26 @@ void QuadControllerPrivate::attitude_control(const double _dt){
      * Use the square root controller to define p_d and q_d as discussed in Lecture 3.
      */
 
-    //this->target_p = ...
-    //this->target_q = ...
+     //Compute target roll rate (p_d)
+    float error = this->target_roll - this->roll;
+    float K = 0.2;
+    if(error >= 0){
+        this->target_p = K * sqrt(abs(error));
+    }
+    else{
+        this->target_p = -K * sqrt(abs(error));
+    }
+
+    
+    //Compute target pitch rate (q_d)
+
+    error = this->target_pitch - this->pitch;
+    if(error >= 0){
+        this->target_q = K * sqrt(abs(error));
+    }
+    else{
+        this->target_q = -K * sqrt(abs(error));
+    }
 
 
     /**
@@ -399,9 +424,9 @@ void QuadControllerPrivate::attitude_control(const double _dt){
      * Do the same thing for PIDq and PIDr.
      */
 
-    //this->body_torque.X( ... );
-    //this->body_torque.Y( ... );
-    //this->body_torque.Z( ... );
+    this->body_torque.X(this->pid_p.Update(this->angular_velocity.X() - this->target_p, std::chrono::duration<double>(_dt)));
+    this->body_torque.Y(this->pid_q.Update(this->angular_velocity.Y() - this->target_q, std::chrono::duration<double>(_dt)));
+    this->body_torque.Z(this->pid_r.Update(this->angular_velocity.Z() - this->target_r, std::chrono::duration<double>(_dt)));
 
 
     /*************************************DEBUG PURPOSE****************************************** */    
@@ -465,10 +490,10 @@ void QuadControllerPrivate::mixer(){
      * Refer to lecture 3 to see how to distribute the force and the torques amoung the target motors' forces.
      */
 
-     this->F_FL = this->body_force.Z()/4.0;
-     this->F_FR = this->body_force.Z()/4.0;
-     this->F_RL = this->body_force.Z()/4.0;
-     this->F_RR = this->body_force.Z()/4.0;
+     this->F_FL = this->body_force.Z()/4.0 + this->body_torque.X();
+     this->F_FR = this->body_force.Z()/4.0 - this->body_torque.X();
+     this->F_RL = this->body_force.Z()/4.0 + this->body_torque.X();
+     this->F_RR = this->body_force.Z()/4.0 - this->body_torque.X();
 
 
     
